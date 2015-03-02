@@ -40,9 +40,6 @@ public final class Validators {
     private static final String HALF_KATAKANA_REGEX = "^[\uFF65-\uFF9F]+$";
     /** 正規表現：全角かな */
     private static final String HIRAGANA_REGEX = "^[\u3040-\u309F]+$";;
-    /** 正規表現：ジャストアカウント内部ID */
-    private final static String JUST_ACCOUNT_INTERNAL_ID_REGEX =
-            "^[0-9]+\\.[0-9a-zA-Z]+=account.com$";
     /** 正規表現：電話番号 */
     /* 正規表現はこちらを参考(http://lightmaterial.blogspot.jp/2007/10/blog-post_14.html) */
     private final static String TEL_NO_REGEX =
@@ -55,11 +52,6 @@ public final class Validators {
     private static final String SPACE = " ";
     private static final String EM_SPACE = "　";
     private static final String EM_LONG_MARKS = "ー";
-
-    private final static char CHAR_AT = '@';
-    private final static char CHAR_DOT = '.';
-    private final static String EMAIL_FORBIDDEN = "\"(),:;<>[\\]!#$&'*^`{|}~";
-    private final static int MAX_ACCOUNT = 100;
 
     /**
      * private constractors
@@ -278,59 +270,6 @@ public final class Validators {
             check = replace(check, EM_LONG_MARKS, EMPTY);
         }
         return check;
-    }
-
-    /**
-     * Justアカウントのメールアドレス文字列の有効チェック
-     *
-     * @param email メールアドレス文字列
-     * @return メールアドレス文字列が有効の場合<code>true</code>
-     */
-    public static boolean isJustAccountEMail(String email) {
-        if (email != null) {
-            int atPos = email.indexOf(CHAR_AT);
-            if (atPos <= 0) {
-                return false;
-            }
-            if (email.indexOf(CHAR_AT, atPos + 1) > -1) {
-                return false;
-            }
-            int dotPos = email.indexOf(CHAR_DOT, atPos);
-            if (dotPos <= 0) {
-                return false;
-            }
-
-            // Check include no KANJI
-            char[] c = email.toCharArray();
-            int len = c.length;
-            for (int i = 0; i < len; i++) {
-                // 0x21 ～ 0x7E 以外はNG
-                if (c[i] < 0x21 || c[i] > 0x7e) {
-                    return false;
-                }
-                // 禁止文字
-                if (EMAIL_FORBIDDEN.indexOf(c[i]) >= 0) {
-                    return false;
-                }
-            }
-
-            if (email.getBytes().length > MAX_ACCOUNT) {
-                return false;
-            }
-
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * JustAccount内部IDの形式チェック
-     *
-     * @param string 文字列
-     * @return JustAccount内部ID形式の場合<code>true</code>
-     */
-    public static boolean isJustAccountId(String string) {
-        return isPatternMatch(string, JUST_ACCOUNT_INTERNAL_ID_REGEX);
     }
 
 }
